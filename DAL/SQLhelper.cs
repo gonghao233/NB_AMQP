@@ -96,6 +96,7 @@ namespace DAL
                         UP_info data = new UP_info();
                         data = new UP_info();
                         data.event_time = dr["event_time"].ToString();
+                        data.shidu = dr.GetInt32(2);
                         data.wendu = dr.GetInt32(1);
                         list.Add(data);
                     }

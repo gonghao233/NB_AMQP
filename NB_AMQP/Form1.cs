@@ -60,14 +60,28 @@ namespace NB_AMQP
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            Series temperature_series = new Series("温度");
+            Series humidity_series = new Series("湿度");
+            /*数据表格初始化*/
+            chart1.Series.Clear();
             List<UP_info> list = new SQLhelper().select();
             if (list != null)
             {
                 chart1.DataSource = list;
-                chart1.Series["Series1"].ChartType = SeriesChartType.Point;
-                //chart1.Series["Series1"].XValueType = ChartValueType.Time;
-                chart1.Series["Series1"].XValueMember = "event_time";
-                chart1.Series["Series1"].YValueMembers = "wendu";
+                chart1.DataSource = list;
+                //chart1.Series["temperature"].ChartType = SeriesChartType.Line;
+                //chart1.Series["temperature"].XValueMember = "event_time";
+                //chart1.Series["temperature"].YValueMembers = "wendu";
+                temperature_series.ChartType = SeriesChartType.Line;
+                temperature_series.XValueMember = "event_time";
+                temperature_series.YValueMembers = "wendu";
+
+                humidity_series.ChartType = SeriesChartType.Line;
+                humidity_series.XValueMember = "event_time";
+                humidity_series.YValueMembers = "shidu";
+
+                chart1.Series.Add(temperature_series);
+                chart1.Series.Add(humidity_series);
             }
         }
         private void button1_Click(object sender, EventArgs e)
@@ -311,6 +325,34 @@ namespace NB_AMQP
         private void chart1_Click_1(object sender, EventArgs e)
         {
             
+        }
+
+        private void timer_chart_Tick(object sender, EventArgs e)
+        {
+            chart1.Series[0].Points.Clear();
+            Series temperature_series = new Series("温度");
+            Series humidity_series = new Series("湿度");
+            /*数据表格初始化*/
+            chart1.Series.Clear();
+            List<UP_info> list = new SQLhelper().select();
+            if (list != null)
+            {
+                chart1.DataSource = list;
+                chart1.DataSource = list;
+                //chart1.Series["temperature"].ChartType = SeriesChartType.Line;
+                //chart1.Series["temperature"].XValueMember = "event_time";
+                //chart1.Series["temperature"].YValueMembers = "wendu";
+                temperature_series.ChartType = SeriesChartType.Line;
+                temperature_series.XValueMember = "event_time";
+                temperature_series.YValueMembers = "wendu";
+
+                humidity_series.ChartType = SeriesChartType.Line;
+                humidity_series.XValueMember = "event_time";
+                humidity_series.YValueMembers = "shidu";
+
+                chart1.Series.Add(temperature_series);
+                chart1.Series.Add(humidity_series);
+            }
         }
     }
 
