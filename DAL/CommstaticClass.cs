@@ -9,5 +9,6 @@ namespace DAL
     public class CommstaticClass
     {
         public static string ConnectionStrings;
+        public static string ConnectionString_CreatDB;
     }
 }

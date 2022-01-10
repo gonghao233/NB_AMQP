@@ -17,6 +17,10 @@ namespace NB_AMQP
         static void Main()
         {
             CommstaticClass.ConnectionStrings = ConfigurationManager.ConnectionStrings["NB_AMQP"].ConnectionString;
+            CommstaticClass.ConnectionString_CreatDB = ConfigurationManager.ConnectionStrings["Creat_DB"].ConnectionString;
+            SQLhelper sqlhelper = new SQLhelper();
+            string DATABASE_name="MY_DB",Table_name = "WENANDSHI";
+            sqlhelper.Create_DB(DATABASE_name, Table_name);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

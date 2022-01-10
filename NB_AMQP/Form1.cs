@@ -69,9 +69,7 @@ namespace NB_AMQP
             {
                 chart1.DataSource = list;
                 chart1.DataSource = list;
-                //chart1.Series["temperature"].ChartType = SeriesChartType.Line;
-                //chart1.Series["temperature"].XValueMember = "event_time";
-                //chart1.Series["temperature"].YValueMembers = "wendu";
+
                 temperature_series.ChartType = SeriesChartType.Line;
                 temperature_series.XValueMember = "event_time";
                 temperature_series.YValueMembers = "wendu";
@@ -82,6 +80,27 @@ namespace NB_AMQP
 
                 chart1.Series.Add(temperature_series);
                 chart1.Series.Add(humidity_series);
+            }
+
+            chart2.Series.Clear();
+            if (list != null)
+            {
+                chart2.DataSource = list;
+                chart2.DataSource = list;
+
+                temperature_series.ChartType = SeriesChartType.Line;
+                temperature_series.XValueMember = "event_time";
+                temperature_series.YValueMembers = "wendu";
+
+                humidity_series.ChartType = SeriesChartType.Line;
+                humidity_series.XValueMember = "event_time";
+                humidity_series.YValueMembers = "shidu";
+
+                chart2.Series.Add(temperature_series);
+                chart2.Series.Add(humidity_series);
+                chart2.ChartAreas[0].AxisX.ScrollBar.Enabled = Enabled;
+                chart2.ChartAreas[0].AxisX.ScrollBar.ButtonColor = Color.Blue;
+                chart2.ChartAreas[0].AxisX.ScrollBar.IsPositionedInside = Enabled;
             }
         }
         private void button1_Click(object sender, EventArgs e)
@@ -352,6 +371,7 @@ namespace NB_AMQP
 
                 chart1.Series.Add(temperature_series);
                 chart1.Series.Add(humidity_series);
+                chart1.ChartAreas[0].AxisX.ScrollBar.ButtonColor = Color.LightBlue;
             }
         }
     }

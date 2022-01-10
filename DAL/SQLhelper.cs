@@ -16,6 +16,10 @@ namespace DAL
         {
             return new SqlConnection(ConnectionStrings);
         }
+        public SqlConnection creatconnection_creatdb()
+        {
+            return new SqlConnection(ConnectionString_CreatDB);
+        }
         public  void UP_INFO(UP_info uP_Info)
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -158,6 +162,46 @@ namespace DAL
                 int iRows = cmd.ExecuteNonQuery();
                 cmd.Parameters.Clear();
                 return iRows;
+            }
+        }
+
+        public void Create_DB(string database_name,string table_name)
+        {
+            using (SqlConnection connection = creatconnection_creatdb())
+            {
+                connection.Open();
+                String str = "IF(NOT EXISTS(SELECT * FROM master.dbo.sysdatabases WHERE dbid=db_ID('"+ database_name + "'))) CREATE DATABASE "+ database_name;
+                //SqlParameter[] sqlParameters =
+                //{
+                //new SqlParameter("@DB_NAME",database_name)
+                //};
+                SqlCommand cmd1 = new SqlCommand(str, connection);
+                //cmd1.Parameters.AddRange(sqlParameters);
+                cmd1.ExecuteNonQuery();
+
+                str = "SELECT database_id from sys.databases WHERE Name ='" + database_name+"'";
+                SqlCommand cmd3 = new SqlCommand(str, connection);
+                while (true)
+                {
+                    object resultObj = cmd3.ExecuteScalar();
+                    if (resultObj != null)
+                    {
+                        //MessageBox.Show("已创建数据库！", "创建数据库");
+                        break;
+                    }
+                }
+
+
+                str = "USE "+ database_name+" if not exists(select * from sysobjects where id = OBJECT_ID('" + database_name + ".dbo."+ table_name + "'))" +
+                    "create table "+ table_name + "(device_number int not null,wendu int not null,shidu int not null,device_id char(40)  null,event_time char(40)   null)";
+                //SqlParameter[] sqlParameters_ =
+                //{
+                //new SqlParameter("@DB_NAME",database_name),
+                //new SqlParameter("@Table_NAME",table_name)
+                //};
+                SqlCommand cmd2 = new SqlCommand(str, connection);
+                //cmd2.Parameters.AddRange(sqlParameters_);
+                cmd2.ExecuteNonQuery();
             }
         }
 
