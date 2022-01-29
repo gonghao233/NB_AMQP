@@ -42,7 +42,7 @@ namespace DAL
         /// </summary>
         /// <param name="my_device_number"></param>
         /// <returns></returns>
-        public List<int> Select_lastest_info(int my_device_number)
+        public List<UP_info> Select_lastest_info(int my_device_number)
         {
 
             using (SqlConnection connection = creatconnection())
@@ -65,10 +65,19 @@ namespace DAL
                     int id = reader.GetInt32(0);
                     int temperature = reader.GetInt32(1);
                     int huminidity = reader.GetInt32(2);
+                    //string data_time = reader.GetDateTime(3).ToString("yyyy-MM-dd hh:mm:ss");
+                    string device_id = reader.GetString(3);
+                    DateTime data_time = reader.GetDateTime(4);
                     //MessageBox.Show("温度：" + temperature);
-                    List<int> my_list = new List<int>();
-                    my_list.Add(temperature);
-                    my_list.Add(huminidity);
+                    UP_info my_data = new UP_info();
+                    my_data.device_number = id;
+                    my_data.wendu = temperature;
+                    my_data.shidu = huminidity;
+                    my_data.event_time = data_time.ToString();
+                    my_data.device_id = device_id;
+
+                    List<UP_info> my_list = new List<UP_info>();
+                    my_list.Add(my_data);
                     cmd.Parameters.Clear();
                     return my_list;
                 }

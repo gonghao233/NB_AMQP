@@ -60,23 +60,67 @@ namespace NB_AMQP
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Series temperature_series = new Series("温度");
-            Series humidity_series = new Series("湿度");
+            //if (string.isnullorempty(text_temperature_threshold.text))
+            //{
+            //    text_temperature_threshold.text = "5";
+            //}
+
+            //if (string.isnullorempty(text_humidity_threshold.text))
+            //{
+            //    text_humidity_threshold.text = "45";
+            //}
+
             /*数据表格初始化*/
             chart1.Series.Clear();
             List<UP_info> list = new SQLhelper().select();
             if (list != null)
             {
-                chart1.DataSource = list;
+                Series temperature_series = new Series("温度");
+                Series humidity_series = new Series("湿度");
                 chart1.DataSource = list;
 
                 temperature_series.ChartType = SeriesChartType.Line;
                 temperature_series.XValueMember = "event_time";
                 temperature_series.YValueMembers = "wendu";
+                temperature_series.ToolTip = "温度：#VALY\n时间：#VALX";
+                temperature_series.MarkerColor = Color.Red;
+                temperature_series.MarkerSize = 4;
+                temperature_series.MarkerStyle = MarkerStyle.Circle;
 
                 humidity_series.ChartType = SeriesChartType.Line;
                 humidity_series.XValueMember = "event_time";
                 humidity_series.YValueMembers = "shidu";
+
+
+                int temperature_threshold = Mysetting.Default.temperature_threshold;
+                int humidity_threshold = Mysetting.Default.humidity_threshold;
+
+                StripLine stripMax_temperature = new StripLine();
+                StripLine stripMax_humidity = new StripLine();
+
+                stripMax_temperature.Text = string.Format("温度阈值：{0:F}", temperature_threshold);//展示文本
+                //stripMax.BackColor = Color.FromArgb(208, 109, 106);//背景色
+                stripMax_temperature.BackColor = Color.Black;//背景色
+                stripMax_temperature.Interval = 0;//间隔
+                stripMax_temperature.IntervalOffset = temperature_threshold;//偏移量
+                stripMax_temperature.StripWidth = 0.1;//线宽
+                stripMax_temperature.ForeColor = Color.Black;//前景色
+                stripMax_temperature.TextAlignment = StringAlignment.Near;//文本对齐方式
+
+                stripMax_humidity.Text = string.Format("湿度阈值：{0:F}",humidity_threshold);//展示文本
+                //stripMax.BackColor = Color.FromArgb(208, 109, 106);//背景色
+                stripMax_humidity.BackColor = Color.Black;//背景色
+                stripMax_humidity.Interval = 0;//间隔
+                stripMax_humidity.IntervalOffset = humidity_threshold;//偏移量
+                stripMax_humidity.StripWidth = 0.1;//线宽
+                stripMax_humidity.ForeColor = Color.Black;//前景色
+                stripMax_humidity.TextAlignment = StringAlignment.Near;//文本对齐方式
+
+                chart1.ChartAreas[0].AxisY.StripLines.Add(stripMax_temperature);//添加到ChartAreas中
+                chart1.ChartAreas[0].AxisY.StripLines.Add(stripMax_humidity);
+
+                chart1.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
+                chart1.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
 
                 chart1.Series.Add(temperature_series);
                 chart1.Series.Add(humidity_series);
@@ -85,22 +129,75 @@ namespace NB_AMQP
             chart2.Series.Clear();
             if (list != null)
             {
+                Series temperature_series = new Series("温度");
+                Series humidity_series = new Series("湿度");
                 chart2.DataSource = list;
-                chart2.DataSource = list;
+                //chart2.DataSource = list;
 
                 temperature_series.ChartType = SeriesChartType.Line;
                 temperature_series.XValueMember = "event_time";
                 temperature_series.YValueMembers = "wendu";
 
+                temperature_series.MarkerColor = Color.Red;
+                temperature_series.MarkerSize = 4;
+                temperature_series.MarkerStyle = MarkerStyle.Circle;
+                //temperature_series.MarkerBorderColor = Color.Black;
+                //temperature_series.MarkerBorderWidth = 1;
+                temperature_series.ToolTip = "温度：#VALY\n 时间：#VALX";
+
+
                 humidity_series.ChartType = SeriesChartType.Line;
                 humidity_series.XValueMember = "event_time";
                 humidity_series.YValueMembers = "shidu";
 
+
+
+                //最大线条
+                int max = Mysetting.Default.humidity_threshold;
+                StripLine stripMax = new StripLine();
+                stripMax.Text = string.Format("最大：{0:F}", max);//展示文本
+                //stripMax.BackColor = Color.FromArgb(208, 109, 106);//背景色
+                stripMax.BackColor = Color.Black;//背景色
+                stripMax.Interval = 0;//间隔
+                stripMax.IntervalOffset = max;//偏移量
+                stripMax.StripWidth = 0.01;//线宽
+                stripMax.ForeColor = Color.Black;//前景色
+                stripMax.TextAlignment = StringAlignment.Near;//文本对齐方式
+                chart2.ChartAreas[0].AxisY.StripLines.Add(stripMax);//添加到ChartAreas中
+                chart2.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
+
                 chart2.Series.Add(temperature_series);
                 chart2.Series.Add(humidity_series);
                 chart2.ChartAreas[0].AxisX.ScrollBar.Enabled = Enabled;
-                chart2.ChartAreas[0].AxisX.ScrollBar.ButtonColor = Color.Blue;
+                chart2.ChartAreas[0].AxisX.ScrollBar.ButtonColor = Color.LightBlue;
                 chart2.ChartAreas[0].AxisX.ScrollBar.IsPositionedInside = Enabled;
+                chart2.ChartAreas[0].AxisX.ScaleView.Size = 10;
+                chart2.ChartAreas[0].AxisX.IntervalAutoMode = IntervalAutoMode.VariableCount;
+
+                
+            }
+            this.BackgroundImage = Image.FromFile("E:/NB_AMQP_CODE 测试 2022.1.22/NB_AMQP/NB_AMQP/obj/Debug/背景图片.jpg");
+            this.WindowState = FormWindowState.Maximized;
+
+            DataGridViewTextBoxColumn col_deviceid = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn col_temperature = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn col_humidity = new DataGridViewTextBoxColumn();
+            DataGridViewTextBoxColumn col_datatime = new DataGridViewTextBoxColumn();
+
+            //DataGridViewTextBoxCell celltext = new DataGridViewTextBoxCell();
+
+            col_deviceid.HeaderText = "设备序号";
+            col_temperature.HeaderText = "温度";
+            col_humidity.HeaderText = "湿度";
+            col_datatime.HeaderText = "数据上报时间";
+
+            dataGridView1.Columns.Add(col_deviceid);
+            dataGridView1.Columns.Add(col_temperature);
+            dataGridView1.Columns.Add(col_humidity);
+            dataGridView1.Columns.Add(col_datatime);
+            foreach (DataGridViewColumn column in dataGridView1.Columns)
+            {
+                column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             }
         }
         private void button1_Click(object sender, EventArgs e)
@@ -323,13 +420,30 @@ namespace NB_AMQP
             
             int number = 1;
             SQLhelper sqlhelper = new SQLhelper();
-            List<int> My_list=sqlhelper.Select_lastest_info( number);
+            List<UP_info> My_list=sqlhelper.Select_lastest_info( number);
             if(My_list!=null)
             { 
-            text_wendu.Text = My_list[0].ToString();
-            text_shidu.Text = My_list[1].ToString();
+                text_wendu.Text = My_list[0].wendu.ToString();
+                text_shidu.Text = My_list[0].shidu.ToString();
+                int device_number = My_list[0].device_number;
+                int temperature = My_list[0].wendu;
+                int humidity = My_list[0].shidu;
+                string device_id = My_list[0].device_id;
+                string data_time = My_list[0].event_time;
                 //text_wendu.Text= "1";
+                if(dataGridView1.Rows.Count<My_list[0].device_number)
+                {
+                    DataGridViewRow row = new DataGridViewRow();
+                    dataGridView1.Rows.Add(row);
+                }
+                int row_index = device_number - 1;
+                dataGridView1.Rows[row_index].Cells[0].Value = device_number;
+                dataGridView1.Rows[row_index].Cells[1].Value = temperature;
+                dataGridView1.Rows[row_index].Cells[2].Value = humidity;
+                dataGridView1.Rows[row_index].Cells[3].Value = data_time;
             }
+
+
         }
 
         private void chart1_Click(object sender, EventArgs e)
@@ -364,16 +478,49 @@ namespace NB_AMQP
                 temperature_series.ChartType = SeriesChartType.Line;
                 temperature_series.XValueMember = "event_time";
                 temperature_series.YValueMembers = "wendu";
+                temperature_series.ToolTip = "温度：#VALY\n时间：#VALX";
+                temperature_series.MarkerColor = Color.Red;
+                temperature_series.MarkerSize = 4;
+                temperature_series.MarkerStyle = MarkerStyle.Circle;
 
                 humidity_series.ChartType = SeriesChartType.Line;
                 humidity_series.XValueMember = "event_time";
                 humidity_series.YValueMembers = "shidu";
+
+                chart2.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
+                chart2.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
 
                 chart1.Series.Add(temperature_series);
                 chart1.Series.Add(humidity_series);
                 chart1.ChartAreas[0].AxisX.ScrollBar.ButtonColor = Color.LightBlue;
             }
         }
+
+        private void yuzhishezhi_Click(object sender, EventArgs e)
+        {
+            Form2 form = new Form2();
+            form.Show();
+        }
+
+
+
+        //public class ObjectUtil
+        //{
+        //    /// <summary>
+        //    /// 获取某个对象中的属性值
+        //    /// </summary>
+        //    /// <param name="info"></param>
+        //    /// <param name="field"></param>
+        //    /// <returns></returns>
+        //    public static object GetPropertyValue(object info, string field)
+        //    {
+        //        if (info == null) return null;
+        //        Type t = info.GetType();
+        //        IEnumerable<System.Reflection.PropertyInfo> property = from pi in t.GetProperties() where pi.Name.ToLower() == field.ToLower() select pi;
+        //        return property.First().GetValue(info, null);
+        //    }
+        //}
+
     }
 
     //class timer_init: Form1
